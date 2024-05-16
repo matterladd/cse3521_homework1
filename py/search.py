@@ -86,6 +86,14 @@ def depthFirstSearch(problem):
     # use python set
     # use graph search from informed search slides
     # return `none` in case of error, not an empty list
+    closed_set = set() # set that contains all visited nodes
+    state = problem.getStartState()
+    closed_set.add(state)
+    while(not problem.isGoalState(state)):
+      problem.getSuccessors(state)
+      
+
+    return None
 
     util.raiseNotDefined()
     
