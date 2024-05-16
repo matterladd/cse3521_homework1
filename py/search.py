@@ -84,6 +84,8 @@ def depthFirstSearch(problem):
     YOUR CODE HERE
     """
 
+    print("hello world")
+
     util.raiseNotDefined()
     
 
