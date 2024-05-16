@@ -83,8 +83,9 @@ def depthFirstSearch(problem):
     """
     YOUR CODE HERE
     """
-
-    print("hello world")
+    # use python set
+    # use graph search from informed search slides
+    # return `none` in case of error, not an empty list
 
     util.raiseNotDefined()
     
