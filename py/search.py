@@ -84,16 +84,32 @@ def depthFirstSearch(problem):
     # return `none` in case of error, not an empty list
     closed_set = set() # set that contains all visited nodes
     explore_stack = util.Stack() # stack that contains nodes to explore
-    action_list = []
-    current_state = problem.getStartState()
-    closed_set.add(current_state)
+    current_state = (problem.getStartState(), [])
+    previous_state = (None, [])
+    closed_set.add(current_state[0])
 
-    while(not problem.isGoalState(current_state)):
-      slist = problem.getSuccessors(current_state)
+    print("Current (beginning) state: ", current_state)
+    print("Closed set: ", closed_set)
+
+    while(not problem.isGoalState(current_state[0])):
+      slist = problem.getSuccessors(current_state[0])
       for item in slist:
-         if item[0] not in closed_set:
-            explore_stack.push(item[0])
-      
+         if item[0] not in closed_set: # are you pushing the same state many times possibly?
+            explore_stack.push(item)
+      print("Explore stack: ", explore_stack)
+
+      temp = (current_state[0], current_state[1].copy())
+      successor = explore_stack.pop()
+      print("Explore stack after pop: ", explore_stack)
+      p = previous_state[1].copy()
+      p.append(successor[1])
+      current_state = (successor[0], p)
+      previous_state = temp
+      print("Current state: ", current_state)
+
+      closed_set.add(current_state[0])
+    
+    return current_state[1]
       # think about case where we dead end and do not find goal
 
     return None
