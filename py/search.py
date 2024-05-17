@@ -80,18 +80,21 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    """
-    YOUR CODE HERE
-    """
-    # use python set
-    # use graph search from informed search slides
+
     # return `none` in case of error, not an empty list
     closed_set = set() # set that contains all visited nodes
-    state = problem.getStartState()
-    closed_set.add(state)
-    while(not problem.isGoalState(state)):
-      problem.getSuccessors(state)
+    explore_stack = util.Stack() # stack that contains nodes to explore
+    action_list = []
+    current_state = problem.getStartState()
+    closed_set.add(current_state)
+
+    while(not problem.isGoalState(current_state)):
+      slist = problem.getSuccessors(current_state)
+      for item in slist:
+         if item[0] not in closed_set:
+            explore_stack.push(item[0])
       
+      # think about case where we dead end and do not find goal
 
     return None
 
