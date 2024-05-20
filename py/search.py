@@ -85,7 +85,6 @@ def depthFirstSearch(problem):
     closed_set = set() # set that contains all visited nodes
     explore_stack = util.Stack() # stack that contains nodes to explore
     current_state = (problem.getStartState(), [])
-    previous_state = (None, [])
     closed_set.add(current_state[0])
 
     print("Current (beginning) state: ", current_state)
@@ -96,19 +95,22 @@ def depthFirstSearch(problem):
       for item in slist:
          if item[0] not in closed_set: # are you pushing the same state many times possibly?
             explore_stack.push(item)
-      print("Explore stack: ", explore_stack)
+            closed_set.add(item[0])
+      # print("Closed set: ", closed_set)
+      # print("Explore stack: ", explore_stack)
 
-      temp = (current_state[0], current_state[1].copy())
       successor = explore_stack.pop()
-      print("Explore stack after pop: ", explore_stack)
-      p = previous_state[1].copy()
+      # print("Explore stack after pop: ", explore_stack)
+      p = current_state[1].copy()
+      print("copy of prevList: ", p)
       p.append(successor[1])
-      current_state = (successor[0], p)
-      previous_state = temp
-      print("Current state: ", current_state)
 
-      closed_set.add(current_state[0])
-    
+      current_state = (successor[0], p)
+      print("Current state: ", current_state)
+      print()
+
+      # closed_set.add(current_state[0])
+    # it looks like it breaks exactly halfway... how do we add to the action list?
     return current_state[1]
       # think about case where we dead end and do not find goal
 
