@@ -80,12 +80,12 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-
+    # use a list of 1 element dictionaries intead of tuples
     # return `none` in case of error, not an empty list
-    closed_set = set() # set that contains all visited nodes
+    closed_set = {} # dictionary that contains all visited nodes and their paths
     explore_stack = util.Stack() # stack that contains nodes to explore
     current_state = (problem.getStartState(), [])
-    closed_set.add(current_state[0])
+    closed_set.update({current_state[0] : current_state[1]})
 
     print("Current (beginning) state: ", current_state)
     print("Closed set: ", closed_set)
@@ -95,14 +95,14 @@ def depthFirstSearch(problem):
       for item in slist:
          if item[0] not in closed_set: # are you pushing the same state many times possibly?
             explore_stack.push(item)
-            closed_set.add(item[0])
+            closed_set.update({item[0] : item[1]})
       # print("Closed set: ", closed_set)
       # print("Explore stack: ", explore_stack)
 
       successor = explore_stack.pop()
       # print("Explore stack after pop: ", explore_stack)
       p = current_state[1].copy()
-      print("copy of prevList: ", p)
+      # print("copy of prevList: ", p)
       p.append(successor[1])
 
       current_state = (successor[0], p)
@@ -110,9 +110,8 @@ def depthFirstSearch(problem):
       print()
 
       # closed_set.add(current_state[0])
-    # it looks like it breaks exactly halfway... how do we add to the action list?
     return current_state[1]
-      # think about case where we dead end and do not find goal
+    # think about case where we dead end and do not find goal
 
     return None
 
