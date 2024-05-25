@@ -82,38 +82,28 @@ def depthFirstSearch(problem):
     """
     # use a list of 1 element dictionaries intead of tuples
     # return `none` in case of error, not an empty list
-    closed_set = {} # dictionary that contains all visited nodes and their paths
-    explore_stack = util.Stack() # stack that contains nodes to explore
-    current_state = (problem.getStartState(), [])
-    closed_set.update({current_state[0] : current_state[1]})
+    open_set = util.Stack()
+    closed_set = set()
 
-    print("Current (beginning) state: ", current_state)
-    print("Closed set: ", closed_set)
+    # wrapper objects are (state, predecessor_wrapper, action_to_successor)
+    pred_wrapper = (problem.getStartState(), None, None)
+    state = problem.getStartState()
+    while(not problem.isGoalState(state)):
+      slist = problem.getSuccessors(state)
+      for next_state,action,cost in slist:
+        if next_state not in closed_set:
+          open_set.push((next_state, pred_wrapper, action))
+      
+      pred_wrapper = open_set.pop()
+      state,predecessor,action = pred_wrapper # unpack tuple
+    
+    path = [action]
+    while(not predecessor == None):
+      state,predecessor,action = predecessor
+      path.append(action)
+    
+    return reversed(path)
 
-    while(not problem.isGoalState(current_state[0])):
-      slist = problem.getSuccessors(current_state[0])
-      for item in slist:
-         if item[0] not in closed_set: # are you pushing the same state many times possibly?
-            explore_stack.push(item)
-            closed_set.update({item[0] : item[1]})
-      # print("Closed set: ", closed_set)
-      # print("Explore stack: ", explore_stack)
-
-      successor = explore_stack.pop()
-      # print("Explore stack after pop: ", explore_stack)
-      p = current_state[1].copy()
-      # print("copy of prevList: ", p)
-      p.append(successor[1])
-
-      current_state = (successor[0], p)
-      print("Current state: ", current_state)
-      print()
-
-      # closed_set.add(current_state[0])
-    return current_state[1]
-    # think about case where we dead end and do not find goal
-
-    return None
 
     util.raiseNotDefined()
     
