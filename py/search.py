@@ -112,9 +112,32 @@ def depthFirstSearch(problem):
     
 
 def breadthFirstSearch(problem):
-    """
-    YOUR CODE HERE
-    """
+    open_set = util.Queue()
+    closed_set = set()
+
+    # wrapper objects are (state, predecessor_wrapper, action_to_successor)
+    pred_wrapper = (problem.getStartState(), None, None)
+    state = problem.getStartState()
+    while(not problem.isGoalState(state)):
+      closed_set.add(state)
+      slist = problem.getSuccessors(state)
+      for next_state,action,cost in slist:
+        if next_state not in closed_set:
+          open_set.push((next_state, pred_wrapper, action))
+          closed_set.add(next_state)
+      
+      pred_wrapper = open_set.pop()
+      state,predecessor,action = pred_wrapper # unpack tuple
+    
+    # path = [action]
+    path = []
+    while(not predecessor == None):
+      path.append(action)
+      state,predecessor,action = predecessor
+    path = list(reversed(path))
+    return path
+
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
