@@ -89,6 +89,7 @@ def depthFirstSearch(problem):
     pred_wrapper = (problem.getStartState(), None, None)
     state = problem.getStartState()
     while(not problem.isGoalState(state)):
+      closed_set.add(state)
       slist = problem.getSuccessors(state)
       for next_state,action,cost in slist:
         if next_state not in closed_set:
@@ -97,13 +98,15 @@ def depthFirstSearch(problem):
       pred_wrapper = open_set.pop()
       state,predecessor,action = pred_wrapper # unpack tuple
     
-    path = [action]
+    # path = [action]
+    path = []
     while(not predecessor == None):
-      state,predecessor,action = predecessor
       path.append(action)
-    
-    return reversed(path)
+      state,predecessor,action = predecessor
+    path = list(reversed(path))
+    return path
 
+    # TODO returning None in case of error
 
     util.raiseNotDefined()
     
