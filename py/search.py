@@ -80,33 +80,32 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    # use a list of 1 element dictionaries intead of tuples
-    # return `none` in case of error, not an empty list
     open_set = util.Stack()
     closed_set = set()
 
     # wrapper objects are (state, predecessor_wrapper, action_to_successor)
-    pred_wrapper = (problem.getStartState(), None, None)
     state = problem.getStartState()
-    while(not problem.isGoalState(state)):
-      closed_set.add(state)
-      slist = problem.getSuccessors(state)
-      for next_state,action,cost in slist:
-        if next_state not in closed_set:
-          open_set.push((next_state, pred_wrapper, action))
-      
+    pred_wrapper = (state, None, None)
+    open_set.push(pred_wrapper)
+    while(not open_set.isEmpty()):
       pred_wrapper = open_set.pop()
       state,predecessor,action = pred_wrapper # unpack tuple
+      if state not in closed_set:
+        closed_set.add(state)
+        if problem.isGoalState(state): # goal test
+          path = []
+          while(not predecessor == None):
+            path.append(action)
+            state,predecessor,action = predecessor
+          path = list(reversed(path))
+          return path
+        
+        slist = problem.getSuccessors(state)
+        for next_state,action,cost in slist:
+          open_set.push((next_state, pred_wrapper, action))
     
-    path = []
-    while(not predecessor == None):
-      path.append(action)
-      state,predecessor,action = predecessor
-    path = list(reversed(path))
-    return path
-
-    # TODO returning None in case of error
-
+    # if here, then goal not found
+    return None
     util.raiseNotDefined()
     
 
@@ -115,27 +114,28 @@ def breadthFirstSearch(problem):
     closed_set = set()
 
     # wrapper objects are (state, predecessor_wrapper, action_to_successor)
-    pred_wrapper = (problem.getStartState(), None, None)
     state = problem.getStartState()
-    while(not problem.isGoalState(state)):
-      closed_set.add(state)                               # TODO redundant?
-      slist = problem.getSuccessors(state)
-      for next_state,action,cost in slist:
-        if next_state not in closed_set:
-          open_set.push((next_state, pred_wrapper, action))
-          closed_set.add(next_state)                      # TODO redundant?
-      
+    pred_wrapper = (state, None, None)
+    open_set.push(pred_wrapper)
+    while(not open_set.isEmpty()):
       pred_wrapper = open_set.pop()
       state,predecessor,action = pred_wrapper # unpack tuple
+      if state not in closed_set:
+        closed_set.add(state)
+        if problem.isGoalState(state): # goal test
+          path = []
+          while(not predecessor == None):
+            path.append(action)
+            state,predecessor,action = predecessor
+          path = list(reversed(path))
+          return path
+        
+        slist = problem.getSuccessors(state)
+        for next_state,action,cost in slist:
+          open_set.push((next_state, pred_wrapper, action))
     
-    path = []
-    while(not predecessor == None):
-      path.append(action)
-      state,predecessor,action = predecessor
-    path = list(reversed(path))
-    return path
-
-
+    # if here, then goal not found
+    return None
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -143,26 +143,28 @@ def uniformCostSearch(problem):
     closed_set = set()
 
     # wrapper objects are (state, predecessor_wrapper, action_to_successor, total_cost)
-    pred_wrapper = (problem.getStartState(), None, None, 0)
     state = problem.getStartState()
-    while(not problem.isGoalState(state)):
-      closed_set.add(state)
-      slist = problem.getSuccessors(state)
-      for next_state,action,cost in slist:
-        if next_state not in closed_set:
-          open_set.push((next_state, pred_wrapper, action, pred_wrapper[3]+cost), pred_wrapper[3]+cost)
-          closed_set.add(next_state)
-      
+    pred_wrapper = (state, None, None, 0)
+    open_set.push(pred_wrapper, 0)
+    while(not open_set.isEmpty()):
       pred_wrapper = open_set.pop()
       state,predecessor,action,tcost = pred_wrapper # unpack tuple
+      if state not in closed_set:
+        closed_set.add(state)
+        if problem.isGoalState(state): # goal test
+          path = []
+          while(not predecessor == None):
+            path.append(action)
+            state,predecessor,action,tcost = predecessor
+          path = list(reversed(path))
+          return path
+        
+        slist = problem.getSuccessors(state)
+        for next_state,action,cost in slist:
+          open_set.push((next_state, pred_wrapper, action, pred_wrapper[3]+cost), pred_wrapper[3]+cost)
     
-    path = []
-    while(not predecessor == None):
-      path.append(action)
-      state,predecessor,action,tcost = predecessor
-    path = list(reversed(path))
-    return path
-    
+    # if here, then goal not found
+    return None
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
