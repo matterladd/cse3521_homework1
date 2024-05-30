@@ -142,7 +142,7 @@ def uniformCostSearch(problem):
     open_set = util.PriorityQueue()
     closed_set = set()
 
-    # wrapper objects are (state, predecessor_wrapper, action_to_successor, total_cost)
+    # wrapper objects are (state, predecessor_wrapper, action_to_successor, backwards_cost)
     state = problem.getStartState()
     pred_wrapper = (state, None, None, 0)
     open_set.push(pred_wrapper, 0)
@@ -175,9 +175,34 @@ def nullHeuristic(state, problem=None):
     return 0
 
 def aStarSearch(problem, heuristic=nullHeuristic):
-    """
-    YOUR CODE HERE
-    """
+    open_set = util.PriorityQueue()
+    closed_set = set()
+
+    # wrapper objects are (state, predecessor_wrapper, action_to_successor, backwards_cost)
+    state = problem.getStartState()
+    pred_wrapper = (state, None, None, 0)
+    h_start = heuristic(state, problem)
+    open_set.push(pred_wrapper, h_start)
+    while(not open_set.isEmpty()):
+      pred_wrapper = open_set.pop()
+      state,predecessor,action,tcost = pred_wrapper # unpack tuple
+      if state not in closed_set:
+        closed_set.add(state)
+        if problem.isGoalState(state): # goal test
+          path = []
+          while(not predecessor == None):
+            path.append(action)
+            state,predecessor,action,tcost = predecessor
+          path = list(reversed(path))
+          return path
+        
+        slist = problem.getSuccessors(state)
+        for next_state,action,cost in slist:
+          h = heuristic(next_state, problem)
+          open_set.push((next_state, pred_wrapper, action, pred_wrapper[3]+cost), pred_wrapper[3]+cost+h)
+    
+    # if here, then goal not found
+    return None
     util.raiseNotDefined()
 
 
